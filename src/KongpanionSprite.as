@@ -8,7 +8,7 @@ package
 
   public class KongpanionSprite extends FlxSprite
   {
-    private var kongpanionData;
+    private var kongpanionData:KongpanionData;
 
     public function KongpanionSprite(kData:KongpanionData) {
       super();

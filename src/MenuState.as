@@ -5,6 +5,7 @@ package
   import flash.events.*;
 
   import com.greensock.*;
+  import com.greensock.easing.*;
   import com.greensock.loading.*;
   import com.greensock.events.LoaderEvent;
   import com.greensock.loading.display.*;
@@ -17,6 +18,11 @@ package
     private var username:String = "schonstal";
 
     private var loadingText:FlxText;
+    private var loadingSprite:FlxSprite;
+
+    private var sinRate:Number = 0.3;
+    private var sinAmt:Number = 0;
+    private var rotationAmt:Number = 20;
     
     override public function create():void {
       super.create();
@@ -27,9 +33,19 @@ package
       loadingText.font = "zerofour";
       loadingText.size = 16;
       add(loadingText);
+
+      loadingSprite = new FlxSprite(FlxG.width - 120, FlxG.height - 145);
+      loadingSprite.loadGraphic(Assets.KongBot);
+      loadingSprite.scale.x = loadingSprite.scale.y = 0;
+      add(loadingSprite);
+
+      TweenMax.to(loadingSprite.scale, 0.5, { x: 0.3, y: 0.3, ease:Elastic.easeOut});
     }
 
     override public function update():void {
+      sinAmt += FlxG.elapsed / sinRate;
+      loadingSprite.angle = Math.sin(sinAmt) * rotationAmt;
+
       if(canStart) {
         loadingText.text = "CLICK TO BEGIN.";
         if(FlxG.mouse.justPressed()) FlxG.switchState(new PlayState());
@@ -63,7 +79,14 @@ package
     }
     
     private function onKongpanionIconsLoaded(a_event:LoaderEvent):void {
-      canStart = true;
+      TweenMax.to(loadingSprite.scale, 0.5, {
+        x: 0,
+        y: 0,
+        ease:Elastic.easeIn,
+        onComplete: function():void {
+          canStart = true;
+        }
+      });
     }
   }
 }
