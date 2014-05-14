@@ -8,13 +8,15 @@ package
   {
     [Embed(source = '../data/04b03.ttf', fontFamily="zerofour", embedAsCFF="false")] public var ZeroFour:String;
 
-    private var kongpanionSprite:FlxSprite;
+    private var kongpanionSprite:KongpanionSprite;
 
     override public function create():void {
       add(new ScrollingBackground());
 
-      kongpanionSprite = new KongpanionSprite(G.kongpanionDatas[0]);
-      //add(kongpanionSprite);
+      kongpanionSprite = new KongpanionSprite(G.kongpanionDatas[1]);
+      add(kongpanionSprite);
+
+      //FlxG.bgColor = FlxU.makeColorFromHSB(FlxU.getHSB(kongpanionSprite.flatColor)[0], 0.4, 0.7);
 
       var overlayGradient:FlxSprite = FlxGradient.createGradientFlxSprite(
         FlxG.width, FlxG.height, [0xff444444, 0xffaaaaaa], 1); 
