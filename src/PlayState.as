@@ -14,7 +14,13 @@ package
       add(new ScrollingBackground());
 
       kongpanionSprite = new KongpanionSprite(G.kongpanionDatas[0]);
-      add(kongpanionSprite);
+      //add(kongpanionSprite);
+
+      var overlayGradient:FlxSprite = FlxGradient.createGradientFlxSprite(
+        FlxG.width, FlxG.height, [0xff444444, 0xffaaaaaa], 1); 
+      overlayGradient.blend = "overlay";
+      overlayGradient.alpha = 0.2;
+      add(overlayGradient);
     }
 
     override public function update():void {

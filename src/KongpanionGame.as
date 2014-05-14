@@ -11,7 +11,6 @@ package
       FlxG.debug = true;
       FlxG.visualDebug = true;
       //forceDebugger = true;
-
       super(768,432,MenuState,1,60,60);
     }
   }

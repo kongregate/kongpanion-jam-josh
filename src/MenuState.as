@@ -20,12 +20,13 @@ package
     private var loadingText:FlxText;
     private var loadingSprite:FlxSprite;
 
-    private var sinRate:Number = 0.3;
+    private var sinRate:Number = 0.25;
     private var sinAmt:Number = 0;
     private var rotationAmt:Number = 20;
     
     override public function create():void {
       super.create();
+
       loadKongpanionJson();
 
       loadingText = new FlxText(0, FlxG.height/2 - 8, FlxG.width);
