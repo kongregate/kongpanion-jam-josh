@@ -14,23 +14,24 @@ package
     private var kongpanionData:KongpanionData;
     private var pixelArray:Vector.<uint>;
 
-    public function KongpanionSprite(kData:KongpanionData) {
+    public function KongpanionSprite(kData:KongpanionData, flat:Boolean=false) {
       super();
       kongpanionData = kData;
       var content:ContentDisplay = LoaderMax.getContent(kongpanionData.name);
 		  pixels = (content.rawContent as Bitmap).bitmapData;
+      antialiasing = true;
       flatColor = determineColor();
-      //flatten();
+      if(flat) flatten();
     }
 
     public function determineColor():uint {
       pixelArray = pixels.getVector(new Rectangle(0,0,width,height));
       var startPixel = width*(height/2);
-      while(pixelArray[startPixel] < 0xff000000) {
+      while(pixelArray[startPixel] < 0xff000000 && startPixel < pixelArray.length-2) {
         startPixel++;
       }
       //makeGraphic(pixelArray[startPixel], width, height);
-      return pixelArray[startPixel];
+      return pixelArray[startPixel] < 0xff000000 ? 0xff175f43 : pixelArray[startPixel];
     }
 
     public function flatten():void {

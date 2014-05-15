@@ -13,15 +13,13 @@ package
     private var sinAmt:Number = 0;
     private var floatAmt:Number = 5;
 
-    public function KongpanionGroup(kongpanionData:KongpanionData) {
+    public function KongpanionGroup(kongpanionData:KongpanionData, flat:Boolean=false) {
       shadow = new FlxSprite();
       shadow.loadGraphic(Assets.Shadow);
-      shadow.offset.y = -15;
-      shadow.scale.x = shadow.scale.y = 0.5
+      shadow.offset.y = -18;
       add(shadow);
 
-      kongpanion = new KongpanionSprite(kongpanionData);
-      kongpanion.scale.x = kongpanion.scale.y = 0.5
+      kongpanion = new KongpanionSprite(kongpanionData, flat);
       add(kongpanion);
     }
 
@@ -31,6 +29,7 @@ package
       kongpanion.offset.y = Math.sin(sinAmt) * floatAmt;
       shadow.x = kongpanion.x;
       shadow.y = kongpanion.y;
+      shadow.alpha = kongpanion.alpha;
     }
   }
 }

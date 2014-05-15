@@ -64,7 +64,6 @@ package
     }
 
     override public function update():void {
-      scrollingBackground.backgroundSprite.hueShift++;
       if(FlxG.mouse.justPressed() && canStart) {
         canStart = false;
         TweenMax.to(kongpanion, 0.5, {
@@ -83,7 +82,7 @@ package
           ease:Quart.easeIn,
           onComplete: function():void {
             transitionGroup.go(function():void {
-              FlxG.switchState(new PlayState());
+              FlxG.switchState(new SelectKongpanionState());
             });
           }
         });
