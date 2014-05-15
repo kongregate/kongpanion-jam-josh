@@ -25,6 +25,7 @@ package
       overlayGradient.loadGraphic(Assets.Gradient);
       overlayGradient.blend = "overlay";
       overlayGradient.alpha = 0.4;
+      overlayGradient.scrollFactor.x = overlayGradient.scrollFactor.y = 0;
       add(overlayGradient);
     }
 
@@ -59,6 +60,7 @@ package
       transitionSprite.makeGraphic(24, 24, (i + j) % 2 == 0 ? 0xff9990ef : 0xffaba6ff);
       transitionSprite.x = transitionSprite.width * i;
       transitionSprite.y = transitionSprite.height * j;
+      transitionSprite.scrollFactor.x = transitionSprite.scrollFactor.y = 0;
       if(reverse) {
         transitionSprite.scale.x = transitionSprite.scale.y = 0;
       }

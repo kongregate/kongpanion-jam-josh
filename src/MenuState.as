@@ -15,7 +15,7 @@ package
     [Embed(source = '../data/Arvo.ttf', fontFamily="zerofour", embedAsCFF="false")] public var ZeroFour:String;
 
     private var canStart:Boolean = false;
-    private var username:String = "schonstal";
+    private var username:String = "minkette";
 
     private var loadingText:FlxText;
     private var loadingSprite:FlxSprite;

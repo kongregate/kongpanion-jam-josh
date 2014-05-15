@@ -20,6 +20,7 @@ package
           backgroundSprite.loadGraphic(Assets.PinkDiamonds);
           backgroundSprite.x = backgroundSprite.width * i;
           backgroundSprite.y = backgroundSprite.height * j;
+          backgroundSprite.scrollFactor.x = backgroundSprite.scrollFactor.y = 0;
           add(backgroundSprite);
           FlxScrollZone.add(backgroundSprite, new Rectangle(0, 0, backgroundSprite.width, backgroundSprite.height), 0.5, 0.5);
           FlxScrollZone.startScrolling(backgroundSprite);

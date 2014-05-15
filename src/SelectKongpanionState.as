@@ -15,11 +15,12 @@ package
 
     private var kongpanionTexts:Array = new Array();
     private var kongpanions:Array = new Array();
-    private var kongpanionIndex:int=0;
 
     private var canSelect:Boolean = false;
 
     override public function create():void {
+      G.kongpanionIndex = 0;
+
       scrollingBackground = new ScrollingBackground();
       add(scrollingBackground);
 
@@ -81,28 +82,28 @@ package
       if(!canSelect) return;
 
       if(FlxG.keys.justPressed("RIGHT")) {
-        TweenMax.to(kongpanionTexts[kongpanionIndex], 0.25, {
+        TweenMax.to(kongpanionTexts[G.kongpanionIndex], 0.25, {
           x: -100,
           alpha: 0,
           ease:Quart.easeOut
         });
-        TweenMax.to(kongpanions[kongpanionIndex].kongpanion, 0.25, {
+        TweenMax.to(kongpanions[G.kongpanionIndex].kongpanion, 0.25, {
           x: 300,
           alpha: 0,
           ease:Quart.easeOut
         });
 
-        kongpanionIndex++;
-        if(kongpanionIndex >= kongpanions.length) kongpanionIndex = 0;
-        kongpanionTexts[kongpanionIndex].x = 100;
-        kongpanions[kongpanionIndex].kongpanion.x = 450;
+        G.kongpanionIndex++;
+        if(G.kongpanionIndex >= kongpanions.length) G.kongpanionIndex = 0;
+        kongpanionTexts[G.kongpanionIndex].x = 100;
+        kongpanions[G.kongpanionIndex].kongpanion.x = 450;
 
-        TweenMax.to(kongpanionTexts[kongpanionIndex], 0.25, {
+        TweenMax.to(kongpanionTexts[G.kongpanionIndex], 0.25, {
           x: 0,
           alpha: 1,
           ease:Quart.easeOut
         });
-        TweenMax.to(kongpanions[kongpanionIndex].kongpanion, 0.25, {
+        TweenMax.to(kongpanions[G.kongpanionIndex].kongpanion, 0.25, {
           x: FlxG.width/2 - kongpanions[0].kongpanion.width/2,
           alpha: 1,
           ease:Quart.easeOut
@@ -110,28 +111,28 @@ package
       }
 
       if(FlxG.keys.justPressed("LEFT")) {
-        TweenMax.to(kongpanionTexts[kongpanionIndex], 0.25, {
+        TweenMax.to(kongpanionTexts[G.kongpanionIndex], 0.25, {
           x: 100,
           alpha: 0,
           ease:Quart.easeOut
         });
-        TweenMax.to(kongpanions[kongpanionIndex].kongpanion, 0.25, {
+        TweenMax.to(kongpanions[G.kongpanionIndex].kongpanion, 0.25, {
           x: 400,
           alpha: 0,
           ease:Quart.easeOut
         });
 
-        kongpanionIndex--;
-        if(kongpanionIndex < 0) kongpanionIndex = kongpanions.length - 1;
-        kongpanionTexts[kongpanionIndex].x = -100;
-        kongpanions[kongpanionIndex].kongpanion.x = 250;
+        G.kongpanionIndex--;
+        if(G.kongpanionIndex < 0) G.kongpanionIndex = kongpanions.length - 1;
+        kongpanionTexts[G.kongpanionIndex].x = -100;
+        kongpanions[G.kongpanionIndex].kongpanion.x = 250;
 
-        TweenMax.to(kongpanionTexts[kongpanionIndex], 0.25, {
+        TweenMax.to(kongpanionTexts[G.kongpanionIndex], 0.25, {
           x: 0,
           alpha: 1,
           ease:Quart.easeOut
         });
-        TweenMax.to(kongpanions[kongpanionIndex].kongpanion, 0.25, {
+        TweenMax.to(kongpanions[G.kongpanionIndex].kongpanion, 0.25, {
           x: FlxG.width/2 - kongpanions[0].kongpanion.width/2,
           alpha: 1,
           ease:Quart.easeOut
@@ -139,18 +140,18 @@ package
       }
 
       if(FlxG.keys.justPressed("ENTER") || FlxG.keys.justPressed("SPACE")) {
-        if(G.kongpanionDatas[kongpanionIndex].isOwned) {
+        if(G.kongpanionDatas[G.kongpanionIndex].isOwned) {
           canSelect = false;
-          TweenMax.to(kongpanionTexts[kongpanionIndex], 0.5, {
+          TweenMax.to(kongpanionTexts[G.kongpanionIndex], 0.5, {
             y: 500,
             alpha: 0,
             ease:Quart.easeOut
           });
-          TweenMax.to(kongpanions[kongpanionIndex].kongpanion, 0.5, {
+          TweenMax.to(kongpanions[G.kongpanionIndex].kongpanion, 0.5, {
             alpha: 0,
             ease:Quart.easeOut
           });
-          TweenMax.to(kongpanions[kongpanionIndex].kongpanion.scale, 0.5, {
+          TweenMax.to(kongpanions[G.kongpanionIndex].kongpanion.scale, 0.5, {
             x: 0,
             y: 0,
             ease:Quart.easeOut
@@ -161,7 +162,7 @@ package
             ease:Quart.easeIn,
             onComplete: function():void {
               transitionGroup.go(function():void {
-                FlxG.switchState(new PlayState());
+                FlxG.switchState(new DashState());
               });
             }
           });

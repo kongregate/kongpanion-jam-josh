@@ -28,8 +28,9 @@ package
     }
 
     override public function update():void {
-      scrollingBackground.backgroundSprite.hueShift++;
-      if(FlxG.keys.justPressed("SPACE")) FlxG.switchState(new PlayState());
+      if(FlxG.keys.justPressed("SPACE")) {
+        FlxG.switchState(new PlayState());
+      }
       super.update();
     }
 

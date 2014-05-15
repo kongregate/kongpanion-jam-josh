@@ -9,6 +9,7 @@ package
         private static var _instance:G;
         private var _hueShift:Number;
         private var _kongpanionDatas:Vector.<KongpanionData>;
+        private var _kongpanionIndex:int;
 
         public function G() {
         }
@@ -28,6 +29,14 @@ package
 
         public static function set hueShift(value:Number):void {
           instance._hueShift = value;
+        }
+
+        public static function get kongpanionIndex():int {
+          return instance._kongpanionIndex;
+        }
+
+        public static function set kongpanionIndex(value:int):void {
+          instance._kongpanionIndex = value;
         }
   
         public static function get kongpanionDatas():Vector.<KongpanionData> {
