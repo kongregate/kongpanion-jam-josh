@@ -10,6 +10,7 @@ package
 
     private var kongpanionSprite:KongpanionSprite;
     private var scrollingBackground:ScrollingBackground;
+    private var transitionGroup:TransitionGroup;
 
     override public function create():void {
       scrollingBackground = new ScrollingBackground();
@@ -19,14 +20,11 @@ package
       //add(kongpanionSprite);
 
       //FlxG.bgColor = FlxU.makeColorFromHSB(FlxU.getHSB(kongpanionSprite.flatColor)[0], 0.4, 0.7);
-
       add(new KongpanionGroup(G.kongpanionDatas[1]));
 
-      var overlayGradient:FlxSprite = FlxGradient.createGradientFlxSprite(
-        FlxG.width, FlxG.height, [0xff444444, 0xffaaaaaa], 1); 
-      overlayGradient.blend = "overlay";
-      overlayGradient.alpha = 0.2;
-      add(overlayGradient);
+      transitionGroup = new TransitionGroup();
+      add(transitionGroup);
+      transitionGroup.go();
     }
 
     override public function update():void {

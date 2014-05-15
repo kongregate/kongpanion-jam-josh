@@ -13,7 +13,6 @@ package
 
       backgroundSprite = new FlxSprite();
       backgroundSprite.loadGraphic(Assets.PinkDiamonds);
-      backgroundSprite.hueShift = 180;
 
       for(var i:int = 0; i * backgroundSprite.width < FlxG.width; i++) {
         for(var j:int = 0; j * backgroundSprite.height < FlxG.height; j++) {

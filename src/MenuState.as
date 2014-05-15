@@ -23,6 +23,8 @@ package
     private var sinRate:Number = 0.25;
     private var sinAmt:Number = 0;
     private var rotationAmt:Number = 20;
+
+    private var transitionGroup:TransitionGroup;
     
     override public function create():void {
       super.create();
@@ -41,18 +43,16 @@ package
       add(loadingSprite);
 
       TweenMax.to(loadingSprite.scale, 0.5, { x: 0.3, y: 0.3, ease:Elastic.easeOut});
+
+      transitionGroup = new TransitionGroup(true);
+      add(transitionGroup);
     }
 
     override public function update():void {
       sinAmt += FlxG.elapsed / sinRate;
       loadingSprite.angle = Math.sin(sinAmt) * rotationAmt;
 
-      if(canStart) {
-        loadingText.text = "CLICK TO BEGIN.";
-        if(FlxG.mouse.justPressed()) FlxG.switchState(new PlayState());
-      } else {
-        loadingText.text = "LOADING KONGPANION DATA FROM KONGREGATE..."
-      }
+      loadingText.text = "LOADING KONGPANION DATA FROM KONGREGATE..."
       super.update();
     }
 
@@ -85,7 +85,9 @@ package
         y: 0,
         ease:Elastic.easeIn,
         onComplete: function():void {
-          canStart = true;
+          transitionGroup.go(function():void {
+            FlxG.switchState(new TitleState());
+          });
         }
       });
     }
