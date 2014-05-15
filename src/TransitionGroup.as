@@ -45,7 +45,6 @@ package
           y: reverse ? 1 : 0,
           ease:Quad.easeIn,
           onComplete: function():void {
-            trace(i,j);
             if(i == 31 && j == 17) {
               if(onCompleteCallback != null) onCompleteCallback();
               reverse = !reverse;
