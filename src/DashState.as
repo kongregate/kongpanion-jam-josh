@@ -2,6 +2,8 @@
 package
 {
   import org.flixel.*;
+  import com.greensock.*;
+  import com.greensock.easing.*;
   import org.flixel.plugin.photonstorm.*;
   import flash.geom.Rectangle;
 
@@ -14,9 +16,14 @@ package
     private var kongpanionSprite:KongpanionSprite;
     private var scrollingBackground:ScrollingBackground;
     private var transitionGroup:TransitionGroup;
+    private var dialog:DialogGroup;
 
     private var player:DashPlayer;
     private var aiPlayers:Array;
+
+    private var completed:int = 0;
+    private var place:int = 0;
+    private var finished:Boolean = false;
 
     private function makeFieldStripe(tileWidth:Number, i:int, j:int):void {
       var fieldSprite:FlxSprite;
@@ -25,6 +32,7 @@ package
       fieldSprite.makeGraphic(10, (250 - (BORDER_WIDTH*2))/20,
                               j%2 == 0 ? 0xffe2f3ec : 0xff175f43);
       add(fieldSprite); 
+      trace(fieldSprite.x);
 
       fieldSprite = new FlxSprite(10 + BORDER_WIDTH + (i*tileWidth),
                                   FlxG.height-270 + j*((250 - (BORDER_WIDTH*2))/20));
@@ -64,6 +72,10 @@ package
         }
       }
 
+      //add(new TimerText());
+      var cd:CountDownGroup = new CountDownGroup()
+      add(cd);
+
       G.shuffle();
 
       aiPlayers = new Array();
@@ -76,6 +88,25 @@ package
       player = new DashPlayer();
       player.y = 215;
       add(player);
+
+      FlxG.camera.scroll.y = -400;
+      TweenMax.to(FlxG.camera.scroll, 3, {
+        y: 0,
+        ease:Quart.easeOut,
+        onComplete: function():void {
+          cd.go(function():void {
+            FlxG.camera.shake(0.02, 0.2);
+            player.started = true;
+            for each(var ai:DashPlayer in aiPlayers) {
+              ai.started = true;
+            }
+          });
+          //ON YOUR MARK...
+        }
+      });
+
+      dialog = new DialogGroup();
+      add(dialog);
 
       transitionGroup = new TransitionGroup();
       add(transitionGroup);
@@ -90,6 +121,28 @@ package
       }
       if(FlxG.camera.scroll.x >= FIELD_SIZE - FlxG.width) {
         FlxG.camera.scroll.x = FIELD_SIZE - FlxG.width;
+      }
+      if (player.x > 7781) {
+        if(!player.finished) completed++;
+        player.finished = true;
+      }
+      for each(var ai:DashPlayer in aiPlayers) {
+        if (ai.x > 7781) {
+          if(!ai.finished) {
+            completed++;
+            if(!player.finished) place++;
+          }
+          ai.finished = true;
+        }
+      }
+
+      if(completed >= 6 && !finished) {
+        finished = true;
+        dialog.show(place, function():void {
+          transitionGroup.go(function():void {
+            FlxG.switchState(new SelectKongpanionState());
+          });
+        });
       }
     }
 

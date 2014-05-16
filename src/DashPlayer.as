@@ -30,6 +30,10 @@ package
 
     private var cpuTimer:Number = 0;
 
+    public var started:Boolean = false;
+    public var finished:Boolean = false;
+    public var totalTimer:Number;
+
     public function DashPlayer(playerControlled:Boolean=true, index:int=0) {
       super();
       human = playerControlled;
@@ -51,6 +55,13 @@ package
 
     override public function update():void {
       super.update();
+      if(!started) return;
+      if(finished) {
+        kongpanion.drag.x = 0;
+        return;
+      }
+      totalTimer += FlxG.elapsed;
+
       speedTimer += FlxG.elapsed;
 
       if((human && FlxG.keys.SPACE) || (!human && Math.random() < 0.7)) {

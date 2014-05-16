@@ -23,6 +23,8 @@ package
 
       kongpanion = new KongpanionSprite(kongpanionData, flat);
       add(kongpanion);
+
+      sinAmt = 2*Math.PI*Math.random();
     }
 
     override public function update():void {
