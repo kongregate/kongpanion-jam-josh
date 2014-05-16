@@ -8,12 +8,15 @@ package
   {
     public static const ORIGINAL_SCALE:Number = 0.5;
     public static const SQUASH_TIME:Number = 0.2;
+    public static const CPU_TIME:Number = 0.2;
     public static const JUMP_TIME:Number = 0.5;
+    public static const MAX_DASH:Number = 250;
 
     private var kongpanionGroup:KongpanionGroup;
     private var kongpanion:KongpanionSprite;
 
     private var squashTimer:Number = 0;
+    private var speedTimer:Number = 0;
     private var squashing:Boolean = false;
 
     private var jumpTimer:Number = 0;
@@ -23,17 +26,34 @@ package
     private var spaceJustPressed:Boolean = false;
     private var spaceJustPressedTimer:Number = 0;
 
-    public function DashPlayer() {
+    private var human:Boolean = false;
+
+    private var cpuTimer:Number = 0;
+
+    public function DashPlayer(playerControlled:Boolean=true, index:int=0) {
       super();
-      kongpanionGroup = new KongpanionGroup(G.kongpanionDatas[G.kongpanionIndex]);
+      human = playerControlled;
+
+      if(!human) {
+        kongpanionGroup = new KongpanionGroup(G.shuffledKongpanionDatas[index]);
+      } else {
+        kongpanionGroup = new KongpanionGroup(G.kongpanionDatas[G.kongpanionIndex]);
+      }
       kongpanion = kongpanionGroup.kongpanion;
       kongpanionGroup.setScale(ORIGINAL_SCALE, ORIGINAL_SCALE); 
       add(kongpanionGroup);
+
+      //kongpanion.y = FlxG.height - 40 - DashState.BORDER_WIDTH - kongpanion.height;
+      kongpanion.maxVelocity.x = 1000;
+
+      speedTimer = SQUASH_TIME;
     }
 
     override public function update():void {
       super.update();
-      if(FlxG.keys.SPACE) {
+      speedTimer += FlxG.elapsed;
+
+      if((human && FlxG.keys.SPACE) || (!human && Math.random() < 0.7)) {
         kongpanion.drag.x = 300;
         squashTimer += FlxG.elapsed;
         jumpTimer += FlxG.elapsed;
@@ -54,8 +74,11 @@ package
           fall();
         }
       }
-      
-      if(FlxG.keys.justPressed("SPACE")) {
+
+      cpuTimer += FlxG.elapsed;
+      if(human && FlxG.keys.justPressed("SPACE") ||
+        (!human && Math.random() < 0.2 && cpuTimer >= CPU_TIME)) {
+        cpuTimer = 0;
         spaceJustPressed = true;
         spaceJustPressedTimer = 0;
       }
@@ -68,9 +91,10 @@ package
       if(spaceJustPressed) {
         if(jumping) return;
         spaceJustPressed = false;
-        kongpanion.velocity.x += 300;
+        kongpanion.velocity.x += (human ? MAX_DASH : MAX_DASH*1.1) * (speedTimer < SQUASH_TIME ? (speedTimer/SQUASH_TIME)*(speedTimer/SQUASH_TIME) : 1);
         squashing = false;
         squashTimer = 0;
+        speedTimer = 0;
 
         TweenMax.to(kongpanionGroup, 0.25, {
           baseOffset: -25,
@@ -164,7 +188,15 @@ package
     }
 
     public function get y():Number {
-      return kongpanion.x;
+      return kongpanion.y;
+    }
+
+    public function set x(value:Number):void {
+      kongpanion.x = value;
+    }
+
+    public function set y(value:Number):void {
+      kongpanion.y = value;
     }
   }
 }
