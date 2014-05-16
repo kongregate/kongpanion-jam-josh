@@ -7,14 +7,21 @@ package
   public class DashPlayer extends FlxGroup
   {
     public static const ORIGINAL_SCALE:Number = 0.5;
-    public static const SQUASH_TIME:Number = 0.25;
+    public static const SQUASH_TIME:Number = 0.2;
+    public static const JUMP_TIME:Number = 0.5;
 
     private var kongpanionGroup:KongpanionGroup;
     private var kongpanion:KongpanionSprite;
 
     private var squashTimer:Number = 0;
     private var squashing:Boolean = false;
+
+    private var jumpTimer:Number = 0;
     private var jumping:Boolean = false;
+    private var falling:Boolean = false;
+
+    private var spaceJustPressed:Boolean = false;
+    private var spaceJustPressedTimer:Number = 0;
 
     public function DashPlayer() {
       super();
@@ -29,15 +36,39 @@ package
       if(FlxG.keys.SPACE) {
         kongpanion.drag.x = 300;
         squashTimer += FlxG.elapsed;
+        jumpTimer += FlxG.elapsed;
         if(squashTimer >= SQUASH_TIME && squashing) {
           jump();
         }
+        if((jumpTimer >= JUMP_TIME || kongpanion.velocity.x < 100) && falling) {
+          fall();
+        }
       } else {
         if(squashing) unSquash();
-        if(!jumping) kongpanion.drag.x = 800;
+        if(!jumping) {
+          kongpanion.drag.x = 800;
+        } else {
+          kongpanion.drag.x = 100;
+        }
+        if(falling) {
+          fall();
+        }
       }
+      
       if(FlxG.keys.justPressed("SPACE")) {
-        kongpanion.velocity.x += 500;
+        spaceJustPressed = true;
+        spaceJustPressedTimer = 0;
+      }
+
+      spaceJustPressedTimer += FlxG.elapsed;
+      if(spaceJustPressedTimer >= 0.2) {
+        spaceJustPressed = false;
+      }
+
+      if(spaceJustPressed) {
+        if(jumping) return;
+        spaceJustPressed = false;
+        kongpanion.velocity.x += 300;
         squashing = false;
         squashTimer = 0;
 
@@ -77,51 +108,63 @@ package
       jumping = true;
       squashing = false;
       squashTimer = 0;
+      jumpTimer = 0;
 
-      TweenMax.to(kongpanionGroup, 1, {
+      TweenMax.to(kongpanionGroup, 0.5, {
         baseOffset: 40,
-        ease:Quart.easeOut
+        ease:Quad.easeOut,
+        onComplete: function():void {
+          falling = true;
+        }
       });
 
       TweenMax.to(kongpanion.scale, 0.1, {
         y: ORIGINAL_SCALE * 1.25,
         x: ORIGINAL_SCALE * 0.75,
-        ease:Quart.easeIn,
+        ease:Quart.easeIn
+      });
+    }
+
+    private function fall():void {
+      jumpTimer = 0;
+      falling = false;
+
+      TweenMax.to(kongpanion.scale, 0.5, {
+        y: ORIGINAL_SCALE,
+        x: ORIGINAL_SCALE,
+        ease:Quad.easeIn,
         onComplete: function():void {
-          new FlxTimer().start(0.5, 1, function():void {
-            TweenMax.to(kongpanion.scale, 0.5, {
-              y: ORIGINAL_SCALE,
-              x: ORIGINAL_SCALE,
-              ease:Quad.easeIn,
-              onComplete: function():void {
-                TweenMax.to(kongpanion.scale, 0.1, {
-                  y: ORIGINAL_SCALE * 0.9,
-                  x: ORIGINAL_SCALE * 1.1,
-                  ease:Quart.easeOut,
-                  onComplete: function():void {
-                    TweenMax.to(kongpanion.scale, 0.25, {
-                      y: ORIGINAL_SCALE,
-                      x: ORIGINAL_SCALE,
-                      ease:Quad.easeIn
-                    });
-                    TweenMax.to(kongpanionGroup, 0.25, {
-                      baseOffset: 0,
-                      ease:Quad.easeIn
-                    });
-                  }
-                });
-              }
-            });
-            TweenMax.to(kongpanionGroup, 0.5, {
-              baseOffset: -15,
-              ease:Quad.easeIn,
-              onComplete: function():void {
-                jumping = false;
-              }
-            });
+          TweenMax.to(kongpanion.scale, 0.1, {
+            y: ORIGINAL_SCALE * 0.9,
+            x: ORIGINAL_SCALE * 1.1,
+            ease:Quart.easeOut,
+            onComplete: function():void {
+              jumping = false;
+              TweenMax.to(kongpanion.scale, 0.25, {
+                y: ORIGINAL_SCALE,
+                x: ORIGINAL_SCALE,
+                ease:Quad.easeIn
+              });
+              TweenMax.to(kongpanionGroup, 0.25, {
+                baseOffset: 0,
+                ease:Quad.easeIn
+              });
+            }
           });
         }
       });
+      TweenMax.to(kongpanionGroup, 0.5, {
+        baseOffset: -15,
+        ease:Quad.easeIn
+      });
+    }
+
+    public function get x():Number {
+      return kongpanion.x;
+    }
+
+    public function get y():Number {
+      return kongpanion.x;
     }
   }
 }
