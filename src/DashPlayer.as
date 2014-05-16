@@ -102,7 +102,7 @@ package
       if(spaceJustPressed) {
         if(jumping) return;
         spaceJustPressed = false;
-        kongpanion.velocity.x += (human ? MAX_DASH : MAX_DASH*1.1) * (speedTimer < SQUASH_TIME ? (speedTimer/SQUASH_TIME)*(speedTimer/SQUASH_TIME) : 1);
+        kongpanion.velocity.x += (human ? MAX_DASH : MAX_DASH*1.3) * (speedTimer < SQUASH_TIME ? (speedTimer/SQUASH_TIME)*(speedTimer/SQUASH_TIME) : 1);
         squashing = false;
         squashTimer = 0;
         speedTimer = 0;
