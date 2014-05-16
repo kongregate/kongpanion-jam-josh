@@ -114,7 +114,6 @@ package
     }
 
     override public function update():void {
-      if(FlxG.keys.justPressed("Q")) FlxG.switchState(new DashState());
       super.update();
       if (player.x > 200) {
         FlxG.camera.scroll.x = player.x - 200;
